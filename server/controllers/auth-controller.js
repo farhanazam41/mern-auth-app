@@ -112,7 +112,8 @@ export const signIn = (req, res) => {
 
         return res.json({
             token,
-            user: { _id, name, email, role }
+            user: { _id, name, email, role },
+			message: `Hey ${name} Welcome back!`
         });
     });
 };

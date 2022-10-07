@@ -3,30 +3,34 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { isAuth } from "../authutils/authUtils";
+import { authenticate, isAuth } from "../authutils/authUtils";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signin = () => {
 	const [values, setValues] = useState({
-		name: "",
 		email: "",
 		password: "",
-		phone: "",
 		buttonText: "Submit",
-	});	
-
+	});
 	const navigate = useNavigate();
-
-	const { name, email, password, phone, buttonText } = values;
+	const { email, password, buttonText } = values;
 
 	useEffect(() => {
-		const userCookieExists = isAuth();
 
+		const userCookieExists = isAuth();
 		if(userCookieExists){
 			navigate("/home");
 		}
+
 	},[navigate])
 
+	// const isPathSignIn = window.location.pathname === "/signin" || "/signup";
+	// useEffect(() => {
+		
+	// 	if (userValid && isPathSignIn) {
+	// 		window.location.href = "/home";
+	// 	}
+	// },[isPathSignIn,userValid])
 	const handleChange = (name) => (event) => {
 		// console.log(event.target.value);
 		setValues({ ...values, [name]: event.target.value });
@@ -38,20 +42,28 @@ const Signup = () => {
 		console.log("values", values);
 		axios({
 			method: "POST",
-			url: "http://localhost:5000/api/signup",
-			data: { name, email, password, phone },
+			url: "http://localhost:5000/api/signin",
+			data: { email, password },
 		})
 			.then((response) => {
 				console.log("SIGNUP SUCCESS", response);
-				setValues({
-					...values,
-					name: "",
-					email: "",
-					password: "",
-					phone: "",
-					buttonText: "Submitted",
+				authenticate(response, () => {
+					setValues({
+						...values,
+						email: "",
+						password: "",
+						buttonText: "Submit",
+					});
+					console.log("response", response);
+					const isSubscriber = isAuth() && isAuth().role === "subscriber";
+					const isAdmin = isAuth() && isAuth().role === "admin";
+					toast.success(response.data.message);
+					if(isAdmin){
+						navigate("/admin");
+					}else{
+						navigate("/home");
+					}
 				});
-				toast.success(response.data.message);
 			})
 			.catch((error) => {
 				console.log("SIGNUP ERROR", error.response.data);
@@ -59,17 +71,8 @@ const Signup = () => {
 			});
 	};
 
-	const signUpForm = () => (
+	const signInForm = () => (
 		<form onSubmit={clickSubmit}>
-			<div className='form-group'>
-				<label className='text-muted'>Name</label>
-				<input
-					onChange={handleChange("name")}
-					value={name}
-					type='text'
-					className='form-control'
-				/>
-			</div>
 			<div className='form-group'>
 				<label className='text-muted'>Email</label>
 				<input
@@ -88,15 +91,6 @@ const Signup = () => {
 					className='form-control'
 				/>
 			</div>
-			<div className='form-group'>
-				<label className='text-muted'>Phone</label>
-				<input
-					onChange={handleChange("phone")}
-					value={phone}
-					type='text'
-					className='form-control'
-				/>
-			</div>
 			<div>
 				<button className='btn btn-primary'>{buttonText}</button>
 			</div>
@@ -106,11 +100,11 @@ const Signup = () => {
 		<Layout>
 			<div className='col-md-6 offset-md-3'>
 				<ToastContainer />
-				<h1 className='p-5 text-center'>Signup</h1>
-				{signUpForm()}
+				<h1 className='p-5 text-center'>SignIn</h1>
+				{signInForm()}
 			</div>
 		</Layout>
 	);
 };
 
-export default Signup;
+export default Signin;

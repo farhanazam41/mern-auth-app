@@ -1,10 +1,9 @@
-import "./App.css";
 import Layout from "./components/Layout";
 
 function App() {
 	return (
 		<Layout>
-			<p>Hello React</p>
+			<p>This is Main page </p>
 		</Layout>
 	);
 }
