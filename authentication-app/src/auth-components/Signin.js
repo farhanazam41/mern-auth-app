@@ -38,7 +38,7 @@ const Signin = () => {
 
 	const clickSubmit = (event) => {
 		event.preventDefault();
-		setValues({ ...values, buttonText: "Submitting" });
+		// setValues({ ...values, buttonText: "Submitting" });
 		console.log("values", values);
 		axios({
 			method: "POST",
@@ -55,7 +55,6 @@ const Signin = () => {
 						buttonText: "Submit",
 					});
 					console.log("response", response);
-					const isSubscriber = isAuth() && isAuth().role === "subscriber";
 					const isAdmin = isAuth() && isAuth().role === "admin";
 					toast.success(response.data.message);
 					if(isAdmin){

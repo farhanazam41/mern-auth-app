@@ -16,12 +16,12 @@ export const Layout = ({ children }) => {
 	};
 
 	const userValid = isAuth();
-	const signOutUser = (e)	=> {
+	const signOutUser = (e) => {
 		e.preventDefault();
 		signout(() => {
 			window.location.href = "/signin";
 		});
-	}
+	};
 
 	const isAdmin = isAuth() && isAuth().role === "admin";
 
@@ -35,24 +35,18 @@ export const Layout = ({ children }) => {
 				</li>
 				{isAdmin && (
 					<li className='nav-item'>
-						<Link
-							className='nav-link'
-							to='/admin'
-							style={isActive("/home")}
-						>
+						<Link className='nav-link' to='/admin' style={isActive("/home")}>
 							Home
 						</Link>
 					</li>
 				)}
-				{!isAdmin && ( <li className='nav-item'>
-				<Link
-					className='nav-link'
-					to='/home'
-					style={isActive("/home")}
-				>
-					Home
-				</Link>
-			</li> )}
+				{userValid && !isAdmin && (
+					<li className='nav-item'>
+						<Link className='nav-link' to='/home' style={isActive("/home")}>
+							Home
+						</Link>
+					</li>
+				)}
 				{!userValid && (
 					<>
 						<li className='nav-item'>

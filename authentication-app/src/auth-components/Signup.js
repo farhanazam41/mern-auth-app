@@ -13,7 +13,7 @@ const Signup = () => {
 		password: "",
 		phone: "",
 		buttonText: "Submit",
-	});	
+	});
 
 	const navigate = useNavigate();
 
@@ -22,10 +22,10 @@ const Signup = () => {
 	useEffect(() => {
 		const userCookieExists = isAuth();
 
-		if(userCookieExists){
+		if (userCookieExists) {
 			navigate("/home");
 		}
-	},[navigate])
+	}, [navigate]);
 
 	const handleChange = (name) => (event) => {
 		// console.log(event.target.value);
